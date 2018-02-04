@@ -112,7 +112,8 @@ gulp.task('chromeManifest', () => {
 
 gulp.task('rollup-contentscript', () => {
   return rollup({
-    entry: 'app/scripts.babel/contentscript.js',
+    input: 'app/scripts.babel/contentscript.js',
+    format: 'umd',
     plugins: [
       json(),
       npm({
@@ -132,7 +133,8 @@ gulp.task('rollup-contentscript', () => {
 
 gulp.task('rollup-background', () => {
   return rollup({
-    entry: 'app/scripts.babel/background.js',
+    input: 'app/scripts.babel/background.js',
+    format: 'umd',
     plugins: [
       json(),
       npm({
