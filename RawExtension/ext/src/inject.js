@@ -2,13 +2,15 @@ var emojiStrategy = {
     id: 'emoji',
     match: /(.*)/,
     search: function (term, callback) {
-        callback(['1', '2', '3']);
+        chrome.extension.sendMessage({text: term}, function(response) {
+            callback(response.emojis)
+        });
     },
     template: function (name) {
         return name;
     },
     replace: function (name) {
-        return '$1' + name + '_emoji ';
+        return '$1' + ' ' + name + ' ';
     }
 };
 
