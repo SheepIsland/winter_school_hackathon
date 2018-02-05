@@ -20,7 +20,7 @@
       ],
       "js": [
         "js/jquery.min.js",
-        "js/textcomplete.min.js",
+        "js/jquery.textcomplete.min.js",
         "src/inject.js"
       ],
       "css": [

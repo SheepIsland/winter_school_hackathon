@@ -1,34 +1,25 @@
-var emojiStrategy = {
-    id: 'emoji',
-    match: /(.*)/,
-    search: function (term, callback) {
-        chrome.extension.sendMessage({text: term}, function(response) {
-            callback(response.emojis)
-        });
-    },
-    template: function (name) {
-        return name;
-    },
-    replace: function (name) {
-        return '$1' + ' ' + name + ' ';
-    }
-};
-
-
-function register(el) {
-    var editor = new Textcomplete.editors.Textarea(el);
-
-    var textcomplete = new Textcomplete(editor, {
-        dropdown: {
-            maxCount: 5
-        }
-    });
-    textcomplete.register([emojiStrategy]);
-}
-
-
 function ready() {
-    jQuery('input, textarea').each(function(i, el) {register(el);});
+    $('div[contenteditable="true"], input[type=text], input[type=search], textarea').textcomplete(
+        [{
+            id: 'emoji',
+            match: /(.*)/,
+                search: function (term, callback) {
+                    chrome.extension.sendMessage({text: term}, function(response) {
+                        callback(response.emojis)
+                    });
+                },
+            template: function (emoji) {
+                return emoji;
+            },
+            replace: function (value) {
+                return '$1' + ' ' + value + ' ';
+            }
+        }], {
+            dropdownClassName: 'textcomplete-dropdown',
+            maxCount: 5,
+            debounce: 400,
+            zIndex: '999999'
+        });
 }
 
 
