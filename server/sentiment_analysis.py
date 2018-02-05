@@ -1,14 +1,14 @@
 import sys
 import pickle
 
-import pandas as pd
+# import pandas as pd
 import numpy as np
-import scipy
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn import preprocessing
-import spacy
+# import scipy
+# from sklearn.preprocessing import LabelEncoder
+# from sklearn.model_selection import train_test_split
+# from sklearn.gaussian_process import GaussianProcessClassifier
+# from sklearn import preprocessing
+# import spacy
 
 
 LABEL_ENCODER_DATA = 'label_encoder.pickle'

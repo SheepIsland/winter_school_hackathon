@@ -2,7 +2,7 @@ import flask
 from flask import request
 import json
 
-from sentiment_analysis import get_sentiments
+from server.sentiment_analysis import get_sentiments
 
 
 app = flask.Flask(__name__)
