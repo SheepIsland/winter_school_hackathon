@@ -6,8 +6,9 @@ function get_emojis(text, callback) {
         method: 'POST',
         body: text
     }).then(function(response) {
-        console.log(response.json());
-        callback(response.json());
+        return response.json();
+    }).then(function(json) {
+        callback(json);
     })
 }
 
@@ -15,5 +16,6 @@ chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         get_emojis(request.text, function (emojis) {
             sendResponse({emojis: emojis});
-        })
+        });
+        return true;
     });
