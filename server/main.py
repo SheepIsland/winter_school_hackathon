@@ -2,14 +2,21 @@ import flask
 from flask import request
 import json
 
-from .sentiment_analysis import get_sentiments
+from sentiment_analysis import get_sentiments
 
 
 app = flask.Flask(__name__)
 
 
 EMOJI_MAP = {
-    'fun': '😁'
+    'happiness': '😊',
+    'hate': '😡',
+    'love': '️❤️',
+    'neutral': '😐',
+    'relief': '😌',
+    'sadness': '😔',
+    'surprise': '😮',
+    'worry': '😧'
 }
 
 
