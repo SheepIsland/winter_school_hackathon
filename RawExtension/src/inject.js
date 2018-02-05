@@ -2,12 +2,13 @@ function ready() {
     $('div[contenteditable="true"], input[type=text], input[type=search], textarea').textcomplete(
         [{
             id: 'emoji',
+            index: 1,
             match: /(.*)/,
-                search: function (term, callback) {
-                    chrome.extension.sendMessage({text: term}, function(response) {
-                        callback(response.emojis)
-                    });
-                },
+            search: function (term, callback) {
+                chrome.runtime.sendMessage({text: term}, function(response) {
+                    callback(response.emojis)
+                });
+            },
             template: function (emoji) {
                 return emoji;
             },

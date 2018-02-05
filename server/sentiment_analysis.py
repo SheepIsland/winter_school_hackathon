@@ -1,14 +1,10 @@
-import sys
+import nltk
+from nltk.tokenize import word_tokenize
+from string import punctuation
 import pickle
-
-# import pandas as pd
+from nltk import WordNetLemmatizer
 import numpy as np
-# import scipy
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.model_selection import train_test_split
-# from sklearn.gaussian_process import GaussianProcessClassifier
-# from sklearn import preprocessing
-# import spacy
+import pandas as pd
 
 
 LABEL_ENCODER_DATA = 'label_encoder.pickle'
@@ -29,7 +25,6 @@ def read_dictionary(filepath):
         return set(f.read().strip().split('\n'))
 
 
-le = load(LABEL_ENCODER_DATA)
 tiv = load(TFIDF_VECTORIZER_DATA)
 svd = load(SVD_DATA)
 model = load(MODEL_DATA)
@@ -37,35 +32,56 @@ model = load(MODEL_DATA)
 pos_words = read_dictionary(POSITIVE_WORDS)
 neg_words = read_dictionary(NEGATIVE_WORDS)
 
-nlp = spacy.load('en')
+
+l = [
+    'fun',
+    'happiness',
+    'hate',
+    'love',
+    'neutral',
+    'relief',
+    'sadness',
+    'surprise',
+    'worry'
+]
+
+
+model2 = []
+for i, name in enumerate(l):
+    with open(name + 'class_last.pickle', 'rb') as fid:
+        model = pickle.load(fid)
+        model2.append(model)
+
+
+def normalize(text):
+    tokens = [word_tokenize(text)][0]
+    lower_tokens = [w.lower() for w in tokens]
+    non_stop_words = [token for token in lower_tokens if token not in nltk.corpus.stopwords.words('english')]
+    non_stop_words_and_punctuation = [word for word in non_stop_words if word not in list(punctuation)]
+    lemmatizer = WordNetLemmatizer()
+    normalized_sents = []
+    normalized_sents.append([lemmatizer.lemmatize(word) for word in non_stop_words_and_punctuation])
+    s = ''
+    for i in normalized_sents[0]:
+        s += i
+        s += ' '
+    return normalized_sents
+
+
+def predict(svd_data, models, l):
+    return [l[i] for i, model in enumerate(models) if model.predict(svd_data.reshape(1, -1)) == 1]
 
 
 def get_sentiments(text):
-    normalized = nlp(text)....
-    words = normalized.split()
-    additional_features = [
-        text.count('!'),
-        text.count('?'),
-        sum(1 for word in words if word in pos_words),
-        sum(1 for word in words if word in neg_words)
-    ]
+    # return ['fun', 'anger']
 
-    X = tiv.transform([normalized])
-    X = svd.transform(X)
+    text_normalized = normalize(text)
+    text_normalized_tiv = tiv.transform([text])
+    svd_data = svd.transform(text_normalized_tiv)
 
-    X = np.concatenate((X, [additional_features]), axis=1)
+    svd_data = np.column_stack((svd_data, pd.Series([text.count('!')])))
+    svd_data = np.column_stack((svd_data, pd.Series([text.count('?')])))
+    svd_data = np.column_stack((svd_data, pd.Series([sum(el in pos_words for el in text_normalized[0])])))
+    svd_data = np.column_stack((svd_data, pd.Series([sum(el in neg_words for el in text_normalized[0])])))
 
-    print(X)
-    print(X.shape)
-
-    probas = model.predict_proba([X])[0]
-    predictions = []
-    for i, proba in enumerate(probas):
-        sentiment = le.inverse_transform([i])[0]
-        predictions.append((proba, sentiment))
-    predictions.sort(reverse=True)
-    return [sentiment for proba, sentiment in predictions]
-
-
-if __name__ == '__main__':
-    get_sentiments('Hi Hello hiya')
+    return predict(svd_data, model2, l)

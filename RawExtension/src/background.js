@@ -1,4 +1,4 @@
-const SENTIMENT_ENDPOINT = 'http://localhost:8089/get_emojis';
+const SENTIMENT_ENDPOINT = 'http://localhost:8089/get_predictions';
 
 
 function get_emojis(text, callback) {
