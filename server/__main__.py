@@ -24,9 +24,13 @@ EMOJI_MAP = {
 }
 
 INVERSE_EMOJI_MAP = {
-    emoji.encode('utf-8'): sentiment
+    # emoji.encode('utf-8'): sentiment
+    emoji: sentiment
     for sentiment, emoji in EMOJI_MAP.items()
 }
+
+from pprint import pprint
+pprint(INVERSE_EMOJI_MAP)
 
 
 def get_emojis(text):
@@ -50,7 +54,7 @@ def get_sentences(emoji):
 
 @app.route('/get_predictions', methods=['POST'])
 def get_predictions():
-    data = request.data.strip()
+    data = request.data.strip().decode('utf-8')
     print(data, data in INVERSE_EMOJI_MAP)
     if data in INVERSE_EMOJI_MAP:
         return get_sentences(data)

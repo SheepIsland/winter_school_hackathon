@@ -27,7 +27,6 @@ def read_dictionary(filepath):
 
 tiv = load(TFIDF_VECTORIZER_DATA)
 svd = load(SVD_DATA)
-model = load(MODEL_DATA)
 
 pos_words = read_dictionary(POSITIVE_WORDS)
 neg_words = read_dictionary(NEGATIVE_WORDS)

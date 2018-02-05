@@ -17,7 +17,7 @@ function ready() {
             }
         }], {
             dropdownClassName: 'textcomplete-dropdown',
-            maxCount: 5,
+            maxCount: 2,
             debounce: 400,
             zIndex: '999999'
         });
