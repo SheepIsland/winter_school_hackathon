@@ -2,16 +2,15 @@ import flask
 from flask import request
 import json
 
+from .sentiment_analysis import get_sentiments
+
+
 app = flask.Flask(__name__)
 
 
 EMOJI_MAP = {
     'fun': '😁'
 }
-
-
-def get_sentiments(text):
-    return ['fun']
 
 
 @app.route('/get_emojis', methods=['POST'])
